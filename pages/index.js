@@ -1,22 +1,6 @@
 import { useEffect, useState } from 'react';
 import MeetupList from '../components/meetups/MeetupList';
-
-const DUMMY_MEETUPS = [
-  {
-    id: 'm1',
-    title: 'A First Meetup',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/1280px-Stadtbild_M%C3%BCnchen.jpg',
-    address: 'Some address 5, 12345 Some City',
-    description: 'This is a first meetup!'
-  },
-  {
-    id: 'm2',
-    title: 'A Second Meetup',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/1280px-Stadtbild_M%C3%BCnchen.jpg',
-    address: 'Some address 10, 12345 Some City',
-    description: 'This is a second meetup!'
-  }
-];
+import { MongoClient, ObjectId } from 'mongodb';
 
 const HomePage = (props) => {
 
@@ -26,21 +10,47 @@ const HomePage = (props) => {
 }
 
 export async function getStaticProps() {
-  //do fetch, db, fs operations
+
+  const getMeetups = async () => {
+    const url = "mongodb+srv://reciko:tekeve72@firstcluster.un4gx.mongodb.net/meetups?retryWrites=true&w=majority";
+    const client = new MongoClient(url);
+
+    try {
+      await client.connect();
+      const meetupsDb = client.db('meetups');
+      const meetupCollection = meetupsDb.collection('meetups');
+      const meetupData = await meetupCollection.find().toArray();
+
+      const meetups = meetupData.map(item => {
+        const id = ObjectId(item._id).toString();
+
+        const meetup = {
+          key: id,
+          id: id,
+          title: item.title,
+          image: item.image,
+          address: item.address,
+          description: item.description
+        }
+
+        return meetup;
+      });
+
+      return meetups;
+
+    } finally {
+      await client.close();
+    }
+  };
+
+  const rmeetups = await getMeetups().catch(error => console.log(error));
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS
+      meetups: rmeetups
     }
-    , revalidate: 3600
+    , revalidate: 1
   }
 }
-
-// export async function getServerSideProps(context){
-//   return {
-//     props: {
-//       meetups: DUMMY_MEETUPS
-//     }
-//   }
-// }
 
 export default HomePage;
