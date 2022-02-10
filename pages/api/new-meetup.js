@@ -5,15 +5,35 @@ async function handler(req, res){
     const data = req.body;
     console.log('handler data', data);
 
-    const url = "mongodb+srv://reciko:tekeve72@firstcluster.un4gx.mongodb.net/meetups?retryWrites=true&w=majority";
-    const client = new MongoClient(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let error = '';
+    let hasError = true;
 
-    client.connect(error =>{
-        const meetupCollection = client.db().collection('meetups');
-        meetupCollection.insertOne(data);
-    });
+    const getMeetupPaths = async () => {
+        const url = "mongodb+srv://reciko:tekeve72@firstcluster.un4gx.mongodb.net/meetups?retryWrites=true&w=majority";
+        const client = new MongoClient(url);
 
-    res.status(201).json({message: 'inserted'});
+        try {
+            await client.connect();
+            const meetupsDb = client.db('meetups');
+            const meetupCollection = meetupsDb.collection('meetups');
+            await meetupCollection.insertOne(data);
+            hasError = false;
+        }
+        catch(e){
+            console.log(e);
+        }
+         finally {
+            await client.close();
+        }
+    };
+
+    await getMeetupPaths().catch(error => console.log(error));
+
+    if (hasError)
+        res.status(201).json({message: 'inserted'});
+    
+    else
+        res.status(400).json({message: error});
 }
 
 export default handler
