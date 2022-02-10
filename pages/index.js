@@ -25,22 +25,22 @@ const HomePage = (props) => {
   )
 }
 
-// export async function getStaticProps() {
-//   //do fetch, db, fs operations
-//   return {
-//     props: {
-//       meetups: DUMMY_MEETUPS
-//     }
-//     , revalidate: 3600
-//   }
-// }
-
-export async function getServerSideProps(context){
+export async function getStaticProps() {
+  //do fetch, db, fs operations
   return {
     props: {
       meetups: DUMMY_MEETUPS
     }
+    , revalidate: 3600
   }
 }
+
+// export async function getServerSideProps(context){
+//   return {
+//     props: {
+//       meetups: DUMMY_MEETUPS
+//     }
+//   }
+// }
 
 export default HomePage;

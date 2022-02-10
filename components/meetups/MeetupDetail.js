@@ -2,7 +2,7 @@ import classes from './MeetupDetail.module.css';
 
 const MeetupDetail = (props) =>{
     return <section className={classes.detail}>
-        <img src={props.url} alt="some image"></img>
+        <img src={props.imageUrl} alt="some image"></img>
         <h1>{props.title}</h1>
         <address>{props.address}</address>
         <p>{props.description}</p>
