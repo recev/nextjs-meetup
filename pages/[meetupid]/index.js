@@ -94,16 +94,7 @@ export async function getStaticPaths() {
     console.log('rmeetups', meetupPaths);
 
     return {
-        paths: [
-  { params: { meetupid: '62026b39b9af02338f94bbeb' } },
-  { params: { meetupid: '62026beaa164abeeec866a1b' } },
-  { params: { meetupid: '62026c51a164abeeec866a1c' } },
-  { params: { meetupid: '62026c54a164abeeec866a1d' } },
-  { params: { meetupid: '62026ccfa164abeeec866a1e' } },
-  { params: { meetupid: '620272cea164abeeec866a1f' } },
-  { params: { meetupid: '6204bc6ced98eb5d43830f6c' } },
-  { params: { meetupid: '6204c1c8ed98eb5d43830f6d' } }
-],
+        paths: meetupPaths,
         fallback: 'blocking'
     }
 }
