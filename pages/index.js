@@ -1,11 +1,17 @@
-import { useEffect, useState } from 'react';
 import MeetupList from '../components/meetups/MeetupList';
 import { MongoClient, ObjectId } from 'mongodb';
+import Head from 'next/head';
 
 const HomePage = (props) => {
 
   return (
-    <MeetupList meetups={props.meetups}></MeetupList>
+    <>
+      <Head>
+        <title>React meetups</title>
+        <meta name='description' content='a huge list of highly active meetups'></meta>
+      </Head>
+      <MeetupList meetups={props.meetups}></MeetupList>
+    </>
   )
 }
 
