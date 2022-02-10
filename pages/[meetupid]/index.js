@@ -56,7 +56,8 @@ export async function getStaticProps(context) {
     console.log('meetup', meetup);
 
     return {
-        props: meetup
+        props: meetup,
+        revalidate: 1
     }
 }
 
